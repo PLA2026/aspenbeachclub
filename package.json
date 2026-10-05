@@ -1,0 +1,9 @@
+{
+  "name": "aspenbeachclub",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Aspen Beach Club and NAMASTAY",
+  "dependencies": {
+    "stripe": "^14.0.0"
+  }
+}
