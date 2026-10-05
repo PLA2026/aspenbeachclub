@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Thank you — Aspen Beach Club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,800;1,9..144,600&family=Jost:wght@500&family=Karla:wght@400;700&family=Courier+Prime&display=swap">
+<style>
+:root{--ink:#1C2C3C;--cream:#F3EAD8;--linen:#FBF5EA;--body:#3E3832;--accent:#A94F2C;--sea:#4F7C70;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:'Karla','Helvetica Neue',sans-serif;font-size:17px;line-height:1.6;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 20px}
+.card{max-width:620px;width:100%;background:var(--linen);border:2px solid var(--ink);padding:56px 44px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:18px}
+@media (max-width:600px){.card{padding:40px 24px}}
+.mark{color:var(--ink)}
+.wordmark{font-family:'Jost','Futura','Century Gothic',sans-serif;font-weight:500;font-size:15px;letter-spacing:.24em;text-transform:uppercase}
+.tag{font-family:'Courier Prime','Courier New',monospace;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--sea);margin:12px 0 0}
+h1{margin:0;font-family:'Fraunces',Georgia,serif;font-weight:800;font-size:clamp(34px,6vw,48px);line-height:1.05}
+p{margin:0;color:var(--body);max-width:480px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 28px;border-radius:999px;background:var(--ink);color:var(--cream);text-decoration:none;font-weight:700;font-size:15px;letter-spacing:.08em;text-transform:uppercase;margin-top:12px}
+.btn:hover{background:#2E4458}
+.btn:focus-visible{outline:3px solid var(--sea);outline-offset:3px}
+.rules{font-family:'Courier Prime','Courier New',monospace;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#5A5148;margin-top:20px}
+</style>
+</head>
+<body>
+<main class="card">
+  <svg class="mark" width="64" height="68" viewBox="-10 -10 625 665" fill="none" stroke="currentColor" stroke-width="26" stroke-linecap="round" aria-hidden="true"><path d="M25 410 V172 L302 17 L580 172 V410"/><path d="M25 410 L207 225 L296 314"/><path d="M217 415 L397 225 L580 410"/><path d="M25 455 H580 M25 498 H580 M98 540 H508 M170 583 H435 M243 625 H362"/></svg>
+  <span class="wordmark">Aspen Beach Club</span>
+  <p class="tag" id="tag">Order Received</p>
+  <h1 id="title">Thank you.</h1>
+  <p id="text">Your order is with the Pro Shop. A receipt is on its way to your email. Goods ship to the address you provided; the Concierge will be in touch to schedule any classes.</p>
+  <a class="btn" id="back" href="/">Return to the Club</a>
+  <p class="rules">Slow down. Do more. Stay a while.</p>
+</main>
+<script>
+(function () {
+  var type = (location.search.match(/[?&]type=(\w+)/) || [])[1];
+  if (type === 'session') {
+    document.getElementById('tag').textContent = 'NAMASTAY · Request Received';
+    document.getElementById('title').textContent = 'Your session is on hold.';
+    document.getElementById('text').textContent = 'We have your request and a $150 hold on your card. Your card is charged only once your ID verification clears and your instructor is confirmed. We will confirm by email and text.';
+    var back = document.getElementById('back');
+    back.textContent = 'Return to NAMASTAY'; back.href = '/namastay';
+  } else {
+    try { localStorage.removeItem('abc-bag'); } catch (e) {}
+  }
+})();
+</script>
+</body>
+</html>

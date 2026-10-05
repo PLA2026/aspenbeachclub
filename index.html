@@ -252,14 +252,25 @@ input,textarea,select,button{font:inherit}
     <p style="font-family:var(--serif);font-style:italic;font-size:26px">Good luck.</p>
   </div>
   <div class="panel">
-    <form id="apply-form" class="stack" style="gap:18px" novalidate>
+    <form id="apply-form" name="membership-application" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="stack" style="gap:18px" novalidate>
+      <input type="hidden" name="form-name" value="membership-application">
+      <p hidden><label>Leave blank <input name="bot-field"></label></p>
       <p class="form-title">Application for Membership</p>
       <div class="field"><label for="app-name">Full name</label><input id="app-name" name="name" type="text" autocomplete="name" required></div>
       <div class="field"><label for="app-email">Email</label><input id="app-email" name="email" type="email" autocomplete="email" required></div>
+      <div class="field"><label for="app-phone">Mobile phone</label><input id="app-phone" name="phone" type="tel" autocomplete="tel"></div>
+      <div class="field"><label for="app-level">NAMASTAY membership</label>
+        <select id="app-level" name="level">
+          <option value="Club membership only">Club membership only</option>
+          <option value="Essential">NAMASTAY Essential, $400 per month</option>
+          <option value="Signature">NAMASTAY Signature, $600 per month</option>
+          <option value="Concierge">NAMASTAY Concierge, $1,500 per month</option>
+        </select>
+      </div>
       <div class="field"><label for="app-why">Why would you be a good addition to the Club?</label><textarea id="app-why" name="why" rows="4"></textarea></div>
       <p class="error" data-error hidden>The Committee requires a name and a valid email.</p>
       <button class="btn btn-ink" type="submit">Submit Application</button>
-      <p class="fine">By applying, you agree to receive correspondence from the Club.</p>
+      <p class="fine">Club membership is complimentary. NAMASTAY membership, if selected, is billed monthly upon admission. By applying, you agree to receive correspondence from the Club.</p>
     </form>
     <div class="confirm" id="apply-done" hidden>
       <p class="tag">Application Received</p>
@@ -328,6 +339,7 @@ input,textarea,select,button{font:inherit}
       <div class="stack" style="gap:14px;max-width:700px">
         <p class="kicker">The Pro Shop</p>
         <h2 class="h2">Classes &amp; Goods</h2>
+        <p class="lede">The Pro Shop is open to members and their guests. All visitors are guests.</p>
       </div>
       <div class="bagbar" aria-live="polite">
         <span class="count">Bag: <span data-bag-count>0</span> item(s) · <span data-bag-total>$0.00</span></span>
@@ -401,7 +413,9 @@ input,textarea,select,button{font:inherit}
     <p class="lede">Inquiries regarding membership, Anything, Everything, amenities, and Toasted Bees consultations are received here. The Concierge responds in the order inquiries are received.</p>
   </div>
   <div class="panel">
-    <form id="concierge-form" class="stack" style="gap:18px" novalidate>
+    <form id="concierge-form" name="concierge" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="stack" style="gap:18px" novalidate>
+      <input type="hidden" name="form-name" value="concierge">
+      <p hidden><label>Leave blank <input name="bot-field"></label></p>
       <div class="field"><label for="cc-name">Name</label><input id="cc-name" name="name" type="text" autocomplete="name" required></div>
       <div class="field"><label for="cc-email">Email</label><input id="cc-email" name="email" type="email" autocomplete="email" required></div>
       <div class="field"><label for="cc-topic">Regarding</label>
@@ -584,24 +598,48 @@ input,textarea,select,button{font:inherit}
   document.querySelector('[data-empty]').addEventListener('click', function () {
     bag = []; save(); renderBag(); toast('Your bag is empty');
   });
-  document.querySelector('[data-checkout]').addEventListener('click', function () {
+  var checkoutBtn = document.querySelector('[data-checkout]');
+  checkoutBtn.addEventListener('click', function () {
     if (!bag.length) { toast('Your bag is empty'); return; }
-    toast('Checkout opens once the Pro Shop is connected');
+    if (location.protocol === 'file:') { toast('Checkout works on the live site'); return; }
+    checkoutBtn.disabled = true; checkoutBtn.textContent = 'One moment\u2026';
+    fetch('/.netlify/functions/checkout', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items: bag.map(function (i) { return { id: i.id, size: i.size || null }; }) })
+    })
+      .then(function (r) { return r.json().then(function (j) { if (!r.ok || !j.url) throw new Error(j.error || ''); return j; }); })
+      .then(function (j) { window.location.href = j.url; })
+      .catch(function (e) {
+        toast(e.message || 'Checkout could not open. Please try again.');
+        checkoutBtn.disabled = false; checkoutBtn.textContent = 'Checkout';
+      });
   });
+  // Returning from a completed checkout empties the bag
+  if (/[?&]ordered=1/.test(location.search)) { bag = []; save(); }
 
   // Forms
   function wireForm(formId, doneId) {
     var form = document.getElementById(formId), done = document.getElementById(doneId);
     var err = form.querySelector('[data-error]');
+    var errText = err.textContent;
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       var name = form.querySelector('[name="name"]').value.trim();
       var email = form.querySelector('[name="email"]').value.trim();
-      if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.hidden = false; return; }
-      err.hidden = true; form.hidden = true; done.hidden = false;
+      if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = errText; err.hidden = false; return; }
+      err.hidden = true;
+      function finish() { form.hidden = true; done.hidden = false; }
+      if (location.protocol === 'file:') { finish(); return; }
+      var btn = form.querySelector('button[type="submit"]'), label = btn.textContent;
+      btn.disabled = true; btn.textContent = 'Sending\u2026';
+      fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(form)).toString() })
+        .then(function (r) { if (!r.ok) throw new Error(r.status); finish(); })
+        .catch(function () { err.textContent = 'Your note did not reach the Club. Please try again in a moment.'; err.hidden = false; btn.disabled = false; btn.textContent = label; });
     });
   }
   wireForm('apply-form', 'apply-done');
+  var lvl = (location.search.match(/[?&]level=([A-Za-z]+)/) || [])[1];
+  if (lvl) { var sel = document.getElementById('app-level'); if (sel.querySelector('option[value="' + lvl + '"]')) sel.value = lvl; }
   wireForm('concierge-form', 'concierge-done');
 
   // Mobile menu

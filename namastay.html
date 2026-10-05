@@ -272,6 +272,7 @@ footer a:hover{color:var(--on-dark)}
 .abc-bar a{color:#F3EAD8;text-decoration:underline;text-underline-offset:3px}
 .abc-bar a:hover{color:#E7B79C}
 .abc-bar span{opacity:.8}
+.form-err{margin:0;color:#9B2C1A;font-size:15px;font-weight:600}
 </style>
 </head>
 <body>
@@ -287,7 +288,7 @@ footer a:hover{color:var(--on-dark)}
       <a href="#practices" data-go="home" data-scroll="practices">Practices</a>
       <a href="#membership" data-go="home" data-scroll="membership">Membership</a>
       <a href="#instructors" data-go="home" data-scroll="instructors">Instructors</a>
-      <a href="#signin" data-go="signin" id="signin-link">Member sign in</a>
+      <a href="#signin" data-go="signin" id="signin-link">Member booking</a>
       <a href="#book" data-go="book" class="btn btn-dark">Book a session</a>
     </nav>
     <div class="nav-right"><a href="#book" data-go="book" class="btn btn-dark nav-book">Book</a>
@@ -305,7 +306,7 @@ footer a:hover{color:var(--on-dark)}
       <p class="lede">NAMASTAY brings exceptional yoga instructors to your home or hotel room. Members choose the day, the time and the teacher. We arrive with everything — you simply roll out of bed and breathe.</p>
       <div class="cta-row">
         <a href="#membership" class="btn btn-accent" data-go="home" data-scroll="membership">Become a member</a>
-        <a href="#signin" class="btn btn-line" data-go="signin">Member sign in</a>
+        <a href="#signin" class="btn btn-line" data-go="signin">Member booking</a>
       </div>
       <p class="small">Now serving Las Vegas, Miami, Los Angeles and New York, 6 AM to 10 PM, seven days a week.</p>
     </div>
@@ -366,21 +367,21 @@ footer a:hover{color:var(--on-dark)}
           <div class="price">$400 <small>per month</small></div>
           <strong>4 sessions per month</strong>
           <ul><li>Book up to 7 days ahead</li><li>Free cancellation up to 48 hours before; later cancellations incur a $35 late fee</li></ul>
-          <a href="#signin" data-go="signin" class="btn btn-line">Choose Essential</a>
+          <a href="index.html?level=Essential#membership" class="btn btn-line">Choose Essential</a>
         </div>
         <div class="tier">
           <h3>Signature</h3>
           <div class="price">$600 <small>per month</small></div>
           <strong>6 sessions per month</strong>
           <ul><li>Book up to 14 days ahead</li><li>Aromatherapy and tea ritual included</li><li>Free cancellation up to 24 hours before; later cancellations incur a $35 late fee</li></ul>
-          <a href="#signin" data-go="signin" class="btn btn-line">Choose Signature</a>
+          <a href="index.html?level=Signature#membership" class="btn btn-line">Choose Signature</a>
         </div>
         <div class="tier">
           <h3>Concierge</h3>
           <div class="price">$1,500 <small>per month</small></div>
           <strong>Unlimited sessions</strong>
           <ul><li>Book up to 30 days ahead</li><li>Aromatherapy and tea ritual included</li><li>First access to every time slot</li><li>Book while traveling in Las Vegas, Miami, Los Angeles and New York</li><li>A dedicated member concierge</li><li>Same-day booking requests</li><li>Free cancellation up to 12 hours before; later cancellations incur a $35 late fee</li></ul>
-          <a href="#signin" data-go="signin" class="btn btn-line">Choose Concierge</a>
+          <a href="index.html?level=Concierge#membership" class="btn btn-line">Choose Concierge</a>
         </div>
       </div>
       <div class="dropin">
@@ -444,12 +445,13 @@ footer a:hover{color:var(--on-dark)}
     <div class="auth-art photo-hero"><h2>Welcome back.<br>Your mat is waiting.</h2></div>
     <div class="auth-form">
       <form id="signin-form">
-        <h1>Member sign in</h1>
-        <label class="field">Email<input type="email" autocomplete="email" placeholder="you@example.com"></label>
-        <label class="field">Password<input type="password" autocomplete="current-password" placeholder="••••••••"></label>
-        <button class="btn btn-dark" type="submit">Sign in</button>
+        <h1>Member booking</h1>
+        <p class="intro">Members book by request. Choose your day, time and teacher, and your concierge confirms the session by email and text.</p>
+        <label class="field">Full name<input type="text" name="name" autocomplete="name" placeholder="First and last name" required></label>
+        <label class="field">Member email<input type="email" name="email" autocomplete="email" placeholder="you@example.com" required></label>
+        <label class="field">Mobile phone<input type="tel" name="phone" autocomplete="tel" placeholder="(555) 555-0123" required></label>
+        <button class="btn btn-dark" type="submit">Continue to booking</button>
         <p class="alt-link">Not a member yet? <a href="#membership" data-go="home" data-scroll="membership">See membership options</a></p>
-        <p class="alt-link" style="font-size:13px">Prototype: any details work.</p>
       </form>
     </div>
   </div>
@@ -460,21 +462,28 @@ footer a:hover{color:var(--on-dark)}
   <div class="auth">
     <div class="auth-art photo-hero"><h2>One session.<br>No commitment.</h2></div>
     <div class="auth-form">
-      <form id="dropin-form">
+      <form id="dropin-form" name="namastay-guest" method="POST" data-netlify="true" netlify-honeypot="bot-field" enctype="multipart/form-data">
+        <input type="hidden" name="form-name" value="namastay-guest">
+        <p hidden><label>Leave blank <input name="bot-field"></label></p>
         <h1>Book a single session</h1>
         <p class="intro"><strong>$150 for 60 minutes.</strong> Because our instructors come to your home or hotel room, we verify every guest before their first session.</p>
-        <label class="field">Full name, as shown on your ID<input type="text" autocomplete="name" placeholder="First and last name"></label>
-        <label class="field">Email<input type="email" autocomplete="email" placeholder="you@example.com"></label>
-        <label class="field">Mobile phone<input type="tel" autocomplete="tel" placeholder="(555) 555-0123"></label>
-        <label class="field">Photo ID<input type="file" accept="image/*,.pdf"><span class="hint">Driver's license, passport or state ID</span></label>
-        <label class="field">Selfie<input type="file" accept="image/*" capture="user"><span class="hint">We match it to your ID photo</span></label>
-        <label class="check-row"><input type="checkbox" required>I agree to identity verification and a background screening before my session is confirmed.</label>
+        <label class="field">Full name, as shown on your ID<input type="text" name="name" autocomplete="name" placeholder="First and last name" required></label>
+        <label class="field">Email<input type="email" name="email" autocomplete="email" placeholder="you@example.com" required></label>
+        <label class="field">Mobile phone<input type="tel" name="phone" autocomplete="tel" placeholder="(555) 555-0123" required></label>
+        <label class="field">Photo ID<input type="file" name="photo-id" accept="image/*,.pdf" required><span class="hint">Driver's license, passport or state ID</span></label>
+        <label class="field">Selfie<input type="file" name="selfie" accept="image/*" capture="user" required><span class="hint">We match it to your ID photo</span></label>
+        <label class="check-row"><input type="checkbox" name="consent" value="yes" required>I agree to identity verification and a background screening before my session is confirmed.</label>
+        <p class="form-err" id="dropin-err" role="alert" hidden></p>
         <button class="btn btn-dark" type="submit">Continue to booking</button>
-        <p class="alt-link">Already a member? <a href="#signin" data-go="signin">Sign in</a></p>
+        <p class="alt-link">Already a member? <a href="#signin" data-go="signin">Book as a member</a></p>
       </form>
     </div>
   </div>
 </main>
+
+<form name="namastay-member-booking" data-netlify="true" netlify-honeypot="bot-field" hidden>
+  <input name="name"><input name="email"><input name="phone"><input name="date"><input name="time"><input name="instructor"><input name="length"><input name="location"><input name="hotel"><input name="room"><input name="address"><input name="bot-field">
+</form>
 
 <!-- ============ BOOK ============ -->
 <main id="view-book" class="view">
@@ -482,7 +491,7 @@ footer a:hover{color:var(--on-dark)}
     <div class="book-main">
       <div class="book-top">
         <h1>Plan your session.</h1>
-        <div class="credits" id="credits">Signature member, 4 of 6 sessions left this month</div>
+        <div class="credits" id="credits">Member booking request</div>
       </div>
       <div class="when">
         <div class="q"><h2>1. Choose a date</h2>
@@ -568,14 +577,27 @@ footer a:hover{color:var(--on-dark)}
     var open = links.classList.toggle('open');
     menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
   });
+  var who = {};
+  function encode(d){ return Object.keys(d).map(function(k){ return encodeURIComponent(k)+'='+encodeURIComponent(d[k]==null?'':d[k]); }).join('&'); }
+  var isPreview = location.protocol === 'file:';
   document.getElementById('signin-form').addEventListener('submit', function(e){
-    e.preventDefault(); signedIn = true; setMode('member');
-    document.getElementById('signin-link').textContent = 'My account';
+    e.preventDefault();
+    var f = e.target;
+    who = { name: f.elements['name'].value.trim(), email: f.elements['email'].value.trim(), phone: f.elements['phone'].value.trim() };
+    signedIn = true; setMode('member');
     show('book');
   });
   document.getElementById('dropin-form').addEventListener('submit', function(e){
-    e.preventDefault(); signedIn = true; setMode('guest');
-    show('book');
+    e.preventDefault();
+    var f = e.target, err = document.getElementById('dropin-err'), btn = f.querySelector('button[type="submit"]');
+    who = { name: f.elements['name'].value.trim(), email: f.elements['email'].value.trim(), phone: f.elements['phone'].value.trim() };
+    function go(){ signedIn = true; setMode('guest'); show('book'); }
+    if (isPreview) { go(); return; }
+    btn.disabled = true; btn.textContent = 'Sending\u2026'; err.hidden = true;
+    fetch('/', { method: 'POST', body: new FormData(f) })
+      .then(function(r){ if (!r.ok) throw new Error(r.status); go(); })
+      .catch(function(){ err.textContent = 'We could not receive your verification. Please check your files (images or PDF, under 8 MB total) and try again.'; err.hidden = false; })
+      .then(function(){ btn.disabled = false; btn.textContent = 'Continue to booking'; });
   });
 
   /* ---------- booking ---------- */
@@ -598,7 +620,7 @@ footer a:hover{color:var(--on-dark)}
   var viewY = S.date.getFullYear(), viewM = S.date.getMonth();
   function setMode(m){
     mode = m;
-    last = addDays(today, (m==='guest' ? 7 : 14) - 1);
+    last = addDays(today, (m==='guest' ? 7 : 30) - 1);
     if (S.date > last) S.date = new Date(today);
     if (m==='guest') S.len = 60;
     S.time = null;
@@ -663,8 +685,8 @@ footer a:hover{color:var(--on-dark)}
       aEl.setAttribute('data-loc', want);
       aEl.className = 'addr' + (want==='home' ? ' home' : '');
       aEl.innerHTML = want === 'hotel'
-        ? '<label class="field">Hotel<input type="text" placeholder="Hotel name"></label><label class="field">Room or suite<input type="text" placeholder="e.g. 1204"></label>'
-        : '<label class="field">Address<input type="text" placeholder="Saved: 1234 Down Dog Way, Miami Beach, FL 33139"></label>';
+        ? '<label class="field">Hotel<input type="text" data-f="hotel" placeholder="Hotel name"></label><label class="field">Room or suite<input type="text" data-f="room" placeholder="e.g. 1204"></label>'
+        : '<label class="field">Address<input type="text" data-f="address" autocomplete="street-address" placeholder="Street, city, state and ZIP"></label>';
     }
     document.getElementById('s-date').textContent = longDate(S.date);
     document.getElementById('s-time').textContent = S.time===null ? 'Choose a time' : times[S.time];
@@ -672,27 +694,58 @@ footer a:hover{color:var(--on-dark)}
     document.getElementById('s-len').textContent = S.len+' minutes';
     document.getElementById('s-loc').textContent = S.loc==='hotel' ? 'Hotel room' : 'Home';
     var guest = mode==='guest';
-    document.getElementById('credits').textContent = guest ? 'Single session guest. ID verification in progress' : 'Signature member, 4 of 6 sessions left this month';
+    document.getElementById('credits').textContent = guest ? 'Single session guest. ID verification in progress' : 'Member booking request';
     document.getElementById('cal-note').innerHTML = guest
       ? 'Single sessions can be booked up to 7 days ahead. Members can book up to 30. <a href="#membership" data-go="home" data-scroll="membership">See membership</a>'
-      : 'As a Signature member, you can book up to 14 days ahead. <a href="#membership" data-go="home" data-scroll="membership">Compare plans</a>';
-    document.getElementById('s-pay').textContent = guest ? '$150' : '1 session credit';
+      : 'Members book up to 7, 14 or 30 days ahead, depending on membership level. <a href="#membership" data-go="home" data-scroll="membership">Compare plans</a>';
+    document.getElementById('s-pay').textContent = guest ? '$150, charged once confirmed' : 'Included in membership';
     document.getElementById('s-note').textContent = guest
       ? 'Your session is confirmed once your ID verification clears. Your instructor arrives 10 minutes early to set up. Free cancellation up to 24 hours before; later cancellations incur a $35 late fee.'
-      : 'Your instructor arrives 10 minutes early to set up. Free cancellation up to 24 hours before, so the session isn\u2019t used. Later cancellations incur a $35 late fee.';
+      : 'Your concierge confirms the session by email and text. Your instructor arrives 10 minutes early to set up. Late cancellations incur a $35 late fee.';
     var ready = S.time!==null && S.inst!==null;
     var c = document.getElementById('confirm');
     c.disabled = !ready;
-    c.textContent = ready ? (guest ? 'Request booking, $150' : 'Confirm booking') : 'Choose a time to continue';
+    c.textContent = ready ? (guest ? 'Request booking, $150' : 'Request booking') : 'Choose a time to continue';
   }
 
+  function details(){
+    var f = function(k){ var i = document.querySelector('#addr [data-f="'+k+'"]'); return i ? i.value.trim() : ''; };
+    var d = S.date;
+    return {
+      name: who.name || '', email: who.email || '', phone: who.phone || '',
+      date: d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'),
+      dateLabel: longDate(d), time: times[S.time], instructor: teachers[S.inst].name, length: S.len,
+      location: S.loc === 'hotel' ? 'Hotel room' : 'Home', hotel: f('hotel'), room: f('room'), address: f('address')
+    };
+  }
+  function whereOk(d){ return d.location === 'Home' ? !!d.address : !!(d.hotel && d.room); }
+  function fail(btn, label, msg){ btn.disabled = false; btn.textContent = label; document.getElementById('s-note').textContent = msg; }
+
   document.getElementById('confirm').onclick = function(){
+    var btn = this, d = details(), label = btn.textContent;
+    if (!whereOk(d)) { document.getElementById('s-note').textContent = d.location === 'Home' ? 'Please add the address where your session takes place.' : 'Please add your hotel and room or suite.'; return; }
+    if (isPreview) { showDone(); return; }
+    btn.disabled = true; btn.textContent = mode === 'guest' ? 'Opening secure checkout\u2026' : 'Sending request\u2026';
+    if (mode === 'guest') {
+      fetch('/.netlify/functions/book-session', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(d) })
+        .then(function(r){ return r.json().then(function(j){ if (!r.ok || !j.url) throw new Error(j.error || 'Checkout failed'); return j; }); })
+        .then(function(j){ window.location.href = j.url; })
+        .catch(function(e){ fail(btn, label, e.message && e.message !== 'Checkout failed' ? e.message : 'We could not open checkout. Please try again in a moment.'); });
+    } else {
+      var data = { 'form-name': 'namastay-member-booking', name: d.name, email: d.email, phone: d.phone, date: d.dateLabel, time: d.time, instructor: d.instructor, length: d.length + ' min', location: d.location, hotel: d.hotel, room: d.room, address: d.address };
+      fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: encode(data) })
+        .then(function(r){ if (!r.ok) throw new Error(r.status); btn.disabled = false; btn.textContent = label; showDone(); })
+        .catch(function(){ fail(btn, label, 'We could not send your request. Please try again in a moment.'); });
+    }
+  };
+
+  function showDone(){
     var guest = mode==='guest', who = teachers[S.inst].name, when = longDate(S.date)+' at '+times[S.time];
-    document.getElementById('done-title').textContent = guest ? 'Request received.' : 'You\u2019re booked.';
+    document.getElementById('done-title').textContent = 'Request received.';
     document.getElementById('done-text').textContent = guest
       ? 'Your session with '+who+' on '+when+' is on hold. We\u2019ll confirm by text and email as soon as your ID verification clears.'
-      : who+' will see you '+when+' for '+S.len+' minutes. Just clear a little floor space \u2014 we\u2019ll handle the rest.';
-    document.getElementById('done-sub').textContent = guest ? 'Your card is charged $150 only once your session is confirmed.' : 'A confirmation is on its way to your email and phone.';
+      : 'Your request for '+who+' on '+when+' for '+S.len+' minutes is with your concierge. You\u2019ll receive a confirmation by email and text.';
+    document.getElementById('done-sub').textContent = guest ? 'Your card is charged $150 only once your session is confirmed.' : 'Just clear a little floor space. We\u2019ll handle the rest.';
     document.getElementById('summary').classList.add('booked');
     if (window.innerWidth < 1100) document.getElementById('summary').scrollIntoView();
   };
