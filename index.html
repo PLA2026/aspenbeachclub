@@ -69,6 +69,27 @@ input,textarea,select,button{font:inherit}
 .nav-links a{text-decoration:none}
 .bag-link{display:inline-flex;align-items:center;min-height:44px;padding:0 16px;border:2px solid var(--ink);border-radius:999px}
 .menu-toggle{display:none;min-height:44px;padding:0 16px;border:2px solid var(--ink);border-radius:999px;background:transparent;color:var(--ink);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:13px;cursor:pointer}
+@media (max-width:600px){
+  .notice{font-size:11px;letter-spacing:.08em;padding:9px 14px}
+  .notice-label{display:none}
+  .nav{flex-wrap:wrap;gap:12px;padding-top:12px;padding-bottom:12px}
+  .brand{gap:10px;min-width:0;flex:1 1 auto}
+  .brand .abc-mark{width:38px;height:40px}
+  .brand-name{font-size:15px;letter-spacing:.14em;white-space:nowrap}
+  .brand-sub{font-size:10px;letter-spacing:.18em}
+  .menu-toggle{min-height:40px;padding:0 14px;font-size:12px}
+  .hero{padding-top:56px;padding-bottom:72px}
+  .hero .stack{gap:22px !important}
+  .hero .kicker{font-size:12px;letter-spacing:.14em}
+  .kicker-line{display:block;margin-top:4px}
+  .hero .lede{font-size:18px}
+  .kicker{letter-spacing:.16em}
+  .hero .btn{width:100%;max-width:340px}
+}
+@media (max-width:380px){
+  .brand-name{font-size:13px;letter-spacing:.1em}
+  .brand-sub{letter-spacing:.12em}
+}
 @media (max-width:900px){
   .menu-toggle{display:inline-flex;align-items:center}
   .nav-links{display:none;width:100%;flex-direction:column;align-items:flex-start;gap:4px;padding:8px 0 4px}
@@ -225,7 +246,7 @@ input,textarea,select,button{font:inherit}
 
 <section id="top" class="wrap hero">
   <div class="stack" style="gap:28px">
-    <p class="kicker">Welcome to Aspen Beach Club. Stay a while.</p>
+    <p class="kicker">Welcome to Aspen Beach Club. <span class="kicker-line">Stay a while.</span></p>
     <h1>Slow down. <em>Do more.</em></h1>
     <p class="lede">Aspen Beach Club is a members-only immersive experience that starts at dawn and ends at dusk, every single day of the year. We never close, so we never have to open.</p>
     <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:14px">
@@ -671,13 +692,24 @@ input,textarea,select,button{font:inherit}
   var h1 = document.querySelector('.hero h1');
   function fitHeadline() {
     var box = h1.parentElement.clientWidth;
+    if (!box) return;
     h1.style.fontSize = '100px';
     var w = h1.scrollWidth;
-    if (w) h1.style.fontSize = Math.floor(100 * box / w * 0.99) + 'px';
+    if (!w) return;
+    var size = Math.floor(100 * box / w * 0.97);
+    h1.style.fontSize = size + 'px';
+    // Safety pass: shrink until it truly fits (covers late-loading fonts and rounding)
+    while (h1.scrollWidth > box && size > 16) { size -= 1; h1.style.fontSize = size + 'px'; }
   }
   fitHeadline();
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitHeadline);
+  if (document.fonts) {
+    if (document.fonts.ready) document.fonts.ready.then(fitHeadline);
+    if (document.fonts.load) document.fonts.load('800 100px Fraunces').then(fitHeadline, function () {});
+    if (document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', fitHeadline);
+  }
+  window.addEventListener('load', fitHeadline);
   window.addEventListener('resize', fitHeadline);
+  window.addEventListener('orientationchange', function () { setTimeout(fitHeadline, 200); });
 
   renderBag();
 })();
