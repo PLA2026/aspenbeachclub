@@ -12,6 +12,7 @@ const CATALOG = {
   a1a:    { name: 'A1A Rollerblade Ride (class)',                              price: 3000,  type: 'class' },
   aero:   { name: 'Oceanside Aerobics (class)',                                price: 3000,  type: 'class' },
   pullup: { name: 'Pull-Up Party (class)',                                     price: 3000,  type: 'class' },
+  beachrun: { name: 'Beach Run (class)',                                       price: 3000,  type: 'class' },
 };
 const SIZES = ['S', 'M', 'L', 'XL', 'XXL'];
 
