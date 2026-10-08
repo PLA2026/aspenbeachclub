@@ -182,9 +182,15 @@ input,textarea,select,button{font:inherit}
 .class-card p{color:var(--body);font-size:16px}
 .class-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:auto;padding-top:8px}
 .class-foot .btn{white-space:nowrap}
-.class-rate{margin-top:auto;padding-top:12px;border-top:1px solid var(--ink);display:flex;flex-direction:column;gap:6px}
+.class-rate{padding-top:12px;border-top:1px solid var(--ink);display:flex;flex-direction:column;gap:6px}
 .class-rate .rate-note{font-size:14px;color:var(--muted)}
 .class-fine{margin-top:20px;font-size:13px;color:var(--muted)}
+.class-card .route{margin-top:auto;font-size:15px;color:var(--ink);font-style:italic}
+.eq-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:4px 0 0;padding:12px 0;border-top:1px solid var(--ink)}
+.eq-stats dt{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.eq-stats dd{margin:2px 0 0;font-family:var(--serif);font-weight:600;font-size:18px;line-height:1.2}
+.eq-record{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding-top:12px;border-top:1px solid var(--ink);font-size:14px}
+.eq-record .btn{white-space:nowrap}
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--cream);padding:14px 22px;border-radius:999px;font-weight:700;font-size:15px;z-index:50;box-shadow:0 6px 24px rgba(28,44,60,.25);max-width:calc(100% - 32px);text-align:center}
 
 /* staff */
@@ -363,7 +369,7 @@ input,textarea,select,button{font:inherit}
     <div class="shop-head">
       <div class="stack" style="gap:14px;max-width:700px">
         <p class="kicker">The Pro Shop</p>
-        <h2 class="h2">Classes &amp; Goods</h2>
+        <h2 class="h2">Goods &amp; Equipment</h2>
         <p class="lede">The Pro Shop is open to members and their guests. All visitors are guests.</p>
       </div>
       <div class="bagbar" aria-live="polite">
@@ -379,9 +385,10 @@ input,textarea,select,button{font:inherit}
     </div>
 
     <div>
-      <h3 class="shop-sub">Classes</h3>
-      <div class="grid" id="classes" style="grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr))"></div>
-      <p class="class-fine">Members and guests use Club equipment at their own risk.</p>
+      <h3 class="shop-sub">Equipment</h3>
+      <p class="lede" style="margin:-8px 0 24px">Use equipment any time that it is available. Send your time to the Club Concierge.</p>
+      <div class="grid" id="classes" style="grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr))"></div>
+      <p class="class-fine">Members and guests use Club equipment at their own risk. Distances are approximate.</p>
     </div>
   </div>
 </section>
@@ -447,7 +454,7 @@ input,textarea,select,button{font:inherit}
       <div class="field"><label for="cc-topic">Regarding</label>
         <select id="cc-topic" name="topic">
           <option>Membership</option><option>Anything</option><option>Everything</option>
-          <option>Amenities</option><option>Toasted Bees consultation</option><option>The Pro Shop</option>
+          <option>Amenities</option><option>Toasted Bees consultation</option><option>The Pro Shop</option><option>Equipment time submission</option>
         </select>
       </div>
       <div class="field"><label for="cc-msg">Message</label><textarea id="cc-msg" name="message" rows="4"></textarea></div>
@@ -473,7 +480,7 @@ input,textarea,select,button{font:inherit}
         <p class="footer-quote">Welcome to Aspen Beach Club.<br>Stay a while.</p>
       </div>
       <div class="footer-col"><span class="label">The Club</span><a href="#membership">Membership</a><a href="#staff">Staff</a><a href="#activities">Daily Activities</a><a href="#amenities">Amenities</a><a href="namastay.html">NAMASTAY</a></div>
-      <div class="footer-col"><span class="label">Pro Shop</span><a href="#proshop">Goods</a><a href="#proshop">Classes</a><a href="#concierge" data-open-tb>Toasted Bees</a><a href="#concierge">Concierge</a></div>
+      <div class="footer-col"><span class="label">Pro Shop</span><a href="#proshop">Goods</a><a href="#proshop">Equipment</a><a href="#concierge" data-open-tb>Toasted Bees</a><a href="#concierge">Concierge</a></div>
       <div class="footer-col"><span class="label">Club Rules</span><span>1. Slow down.</span><span>2. Do more.</span><span>3. Stay a while.</span></div>
     </div>
     <div class="footer-base">
@@ -528,7 +535,21 @@ input,textarea,select,button{font:inherit}
     { id: 'a1a',    hidden: true, name: 'A1A Rollerblade Ride', where: 'Coast',   price: 30, blurb: 'A measured roll along the ocean road. Helmets encouraged. Hurry discouraged.' },
     { id: 'aero',   hidden: true, name: 'Oceanside Aerobics',   where: 'Coast',   price: 30, blurb: 'Classic aerobics, conducted beside the sea. Leg warmers at the member\u2019s discretion.' },
     { id: 'pullup', hidden: true, name: 'Pull-Up Party',        where: 'Grounds', price: 30, blurb: 'Members gather. Members pull up. Attendance is the dress code.' },
-    { id: 'beachrun', selfGuided: true, name: 'Beach Run', where: 'Self-guided · Atlantic Dunes Park, Delray Beach', blurb: 'A morning jog on the sand followed by a soak in the water. Good for the mind. Good for the body. Great for the soul.', rate: '$1.35 per 40 minutes', rateNote: 'Payable to the Club\u2019s automated parking attendant. Available dawn to dusk. No reservation required.' }
+    { id: 'delray', selfGuided: true, name: 'Beach Run', where: 'Delray Beach, Florida',
+      route: 'Atlantic Dunes Park lifeguard tower to Lifeguard Tower S1 at Atlantic Avenue.',
+      stats: [['Distance', '2.8 mi'], ['Elevation', 'Sea level'], ['Best', 'Morning']],
+      blurb: 'A morning jog on the sand followed by a soak in the water. Good for the mind. Good for the body. Great for the soul.',
+      rate: '$1.35 per 40 minutes', rateNote: 'Payable to the Club\u2019s automated parking attendant at Atlantic Dunes Park.' },
+    { id: 'ute', selfGuided: true, name: 'Ute Trail', where: 'Aspen, Colorado',
+      route: 'Ute Avenue trailhead to the Sundeck atop Aspen Mountain.',
+      stats: [['Distance', '3.1 mi'], ['Climb', '3,000+ ft'], ['Summit', '11,212 ft']],
+      blurb: 'Switchbacks through the aspens, a bird\u2019s-eye view of town, then the long climb to the Sundeck. The Club\u2019s steepest piece of equipment. Hydrate. The air is thinner here.',
+      rate: 'Complimentary', rateNote: 'The mountain does not charge. Descent by Silver Queen Gondola at the operator\u2019s posted rates.' },
+    { id: 'strip', selfGuided: true, name: 'The Strip', where: 'Las Vegas, Nevada',
+      route: 'Mandalay Bay to The STRAT, along Las Vegas Boulevard.',
+      stats: [['Distance', '4.0 mi'], ['Elevation', 'Flat'], ['Best', 'After dark']],
+      blurb: 'The Club\u2019s only equipment lit entirely by neon. Run it at night, past the fountains and the marquees, while everyone else is inside.',
+      rate: 'Complimentary', rateNote: 'We\u2019ll leave the lights on for you.' }
   ];
 
   var bag = [];
@@ -610,7 +631,11 @@ input,textarea,select,button{font:inherit}
       '<h4>' + esc(c.name) + '</h4>' +
       '<p>' + esc(c.blurb) + '</p>' +
       (c.selfGuided
-        ? '<div class="class-rate"><span class="price">' + esc(c.rate) + '</span><p class="rate-note">' + esc(c.rateNote) + '</p></div>'
+        ? '<p class="route">' + esc(c.route) + '</p>' +
+          '<dl class="eq-stats">' + c.stats.map(function (st) { return '<div><dt>' + esc(st[0]) + '</dt><dd>' + esc(st[1]) + '</dd></div>'; }).join('') + '</dl>' +
+          '<div class="class-rate"><span class="price">' + esc(c.rate) + '</span><p class="rate-note">' + esc(c.rateNote) + '</p></div>' +
+          '<div class="eq-record"><span>Club record: <strong>Open</strong></span>' +
+          '<a class="btn btn-outline btn-sm" href="#concierge" data-submit-time="' + esc(c.name) + '">Submit a time</a></div>'
         : '<div class="class-foot"><span class="price">' + money(c.price) + '</span>' +
           '<button type="button" class="btn btn-outline btn-sm" data-add-class="' + c.id + '">Reserve a Spot</button></div>') +
       '</article>';
@@ -670,6 +695,13 @@ input,textarea,select,button{font:inherit}
   var lvl = (location.search.match(/[?&]level=([A-Za-z]+)/) || [])[1];
   if (lvl) { var sel = document.getElementById('app-level'); if (sel.querySelector('option[value="' + lvl + '"]')) sel.value = lvl; }
   wireForm('concierge-form', 'concierge-done');
+  document.getElementById('classes').addEventListener('click', function (e) {
+    var a = e.target.closest('[data-submit-time]');
+    if (!a) return;
+    document.getElementById('cc-topic').value = 'Equipment time submission';
+    var msg = document.getElementById('cc-msg');
+    if (!msg.value) msg.value = 'Equipment: ' + a.dataset.submitTime + '\nTime: \nDate: ';
+  });
 
   // Mobile menu
   var toggle = document.querySelector('.menu-toggle'), links = document.getElementById('nav-links');
