@@ -73,7 +73,7 @@ header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bone)
 .view.active{display:block}
 
 /* hero */
-.hero{display:grid;grid-template-columns:1.05fr 1fr;gap:64px;align-items:center;padding:72px 0 104px}
+.hero{display:grid;grid-template-columns:1.05fr 1fr;gap:64px;align-items:center;padding-top:72px;padding-bottom:104px}
 .hero h1{font-size:clamp(64px,9vw,120px);line-height:.92;letter-spacing:-.01em}
 .hero h1 span{display:block;font-style:italic;color:var(--accent)}
 .lede{font-size:20px;color:var(--muted);max-width:32em;margin-top:28px}
@@ -87,7 +87,7 @@ header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bone)
 .ticket .when{font-family:var(--serif);font-size:30px;margin:4px 0 8px}
 .ticket .d{font-size:15px;color:var(--muted)}
 .ticket .ok{display:flex;gap:8px;align-items:center;margin-top:12px;color:var(--accent);font-weight:500;font-size:14px}
-@media (max-width:900px){.hero{grid-template-columns:1fr;padding:48px 0 72px;gap:48px}.hero-art{min-height:480px}.arch{left:30px}}
+@media (max-width:900px){.hero{grid-template-columns:1fr;padding-top:48px;padding-bottom:72px;gap:48px}.hero-art{min-height:480px}.arch{left:30px}}
 
 /* band */
 .band{background:var(--dark);color:var(--on-dark);padding:56px 0}
@@ -272,6 +272,7 @@ footer a:hover{color:var(--on-dark)}
 .abc-bar a{color:#F3EAD8;text-decoration:underline;text-underline-offset:3px}
 .abc-bar a:hover{color:#E7B79C}
 .abc-bar span{opacity:.8}
+@media (max-width:600px){.abc-bar{font-size:11px;letter-spacing:.1em}.abc-bar .wrap{gap:8px;white-space:nowrap}}
 .form-err{margin:0;color:#9B2C1A;font-size:15px;font-weight:600}
 </style>
 </head>
