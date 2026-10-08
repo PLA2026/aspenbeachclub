@@ -182,6 +182,9 @@ input,textarea,select,button{font:inherit}
 .class-card p{color:var(--body);font-size:16px}
 .class-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:auto;padding-top:8px}
 .class-foot .btn{white-space:nowrap}
+.class-rate{margin-top:auto;padding-top:12px;border-top:1px solid var(--ink);display:flex;flex-direction:column;gap:6px}
+.class-rate .rate-note{font-size:14px;color:var(--muted)}
+.class-fine{margin-top:20px;font-size:13px;color:var(--muted)}
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--cream);padding:14px 22px;border-radius:999px;font-weight:700;font-size:15px;z-index:50;box-shadow:0 6px 24px rgba(28,44,60,.25);max-width:calc(100% - 32px);text-align:center}
 
 /* staff */
@@ -378,6 +381,7 @@ input,textarea,select,button{font:inherit}
     <div>
       <h3 class="shop-sub">Classes</h3>
       <div class="grid" id="classes" style="grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr))"></div>
+      <p class="class-fine">Members and guests use Club equipment at their own risk.</p>
     </div>
   </div>
 </section>
@@ -524,7 +528,7 @@ input,textarea,select,button{font:inherit}
     { id: 'a1a',    hidden: true, name: 'A1A Rollerblade Ride', where: 'Coast',   price: 30, blurb: 'A measured roll along the ocean road. Helmets encouraged. Hurry discouraged.' },
     { id: 'aero',   hidden: true, name: 'Oceanside Aerobics',   where: 'Coast',   price: 30, blurb: 'Classic aerobics, conducted beside the sea. Leg warmers at the member\u2019s discretion.' },
     { id: 'pullup', hidden: true, name: 'Pull-Up Party',        where: 'Grounds', price: 30, blurb: 'Members gather. Members pull up. Attendance is the dress code.' },
-    { id: 'beachrun', name: 'Beach Run', where: 'Coast', price: 30, blurb: 'A morning jog on the sand followed by a soak in the water. Good for the mind. Good for the body. Great for the soul.' }
+    { id: 'beachrun', selfGuided: true, name: 'Beach Run', where: 'Self-guided · Atlantic Dunes Park, Delray Beach', blurb: 'A morning jog on the sand followed by a soak in the water. Good for the mind. Good for the body. Great for the soul.', rate: '$1.35 per 40 minutes', rateNote: 'Payable to the Club\u2019s automated parking attendant. Available dawn to dusk. No reservation required.' }
   ];
 
   var bag = [];
@@ -605,8 +609,10 @@ input,textarea,select,button{font:inherit}
       '<span class="where">' + esc(c.where) + '</span>' +
       '<h4>' + esc(c.name) + '</h4>' +
       '<p>' + esc(c.blurb) + '</p>' +
-      '<div class="class-foot"><span class="price">' + money(c.price) + '</span>' +
-      '<button type="button" class="btn btn-outline btn-sm" data-add-class="' + c.id + '">Reserve a Spot</button></div>' +
+      (c.selfGuided
+        ? '<div class="class-rate"><span class="price">' + esc(c.rate) + '</span><p class="rate-note">' + esc(c.rateNote) + '</p></div>'
+        : '<div class="class-foot"><span class="price">' + money(c.price) + '</span>' +
+          '<button type="button" class="btn btn-outline btn-sm" data-add-class="' + c.id + '">Reserve a Spot</button></div>') +
       '</article>';
   }).join('');
 
