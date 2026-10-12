@@ -271,7 +271,7 @@ footer .motto{font-family:var(--mono);letter-spacing:.12em;text-transform:upperc
   var fullDay = document.getElementById('full-day');
   var err = form.querySelector('[data-error]');
   function count() { var n = 0; boxes.forEach(function (b) { if (b.checked) n++; }); return n; }
-  boxes.forEach(function (b) { b.addEventListener('change', function () { fullDay.hidden = count() !== 3; }); });
+  boxes.forEach(function (b) { b.addEventListener('change', function () { fullDay.hidden = count() !== 3; if (fullDay.hidden) form.elements['jacket_size'].value = ''; }); });
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
@@ -279,6 +279,7 @@ footer .motto{font-family:var(--mono);letter-spacing:.12em;text-transform:upperc
     var msg = '';
     if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) msg = 'Please add your name and a valid email.';
     else if (!count()) msg = 'Please choose at least one portion of the day.';
+    else if (count() === 3 && !form.elements['jacket_size'].value) msg = 'Please choose a jacket size.';
     if (msg) { err.textContent = msg; err.hidden = false; return; }
     err.hidden = true;
     var all = count() === 3;
