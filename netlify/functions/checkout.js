@@ -6,6 +6,9 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 // Prices live here, on the server, so nobody can change them in the browser. Amounts in cents.
 const CATALOG = {
+  clubtee:     { name: 'Clubhouse Tee (Washed Black)',          price: 3888, type: 'goods', sizes: ['S', 'M', 'L', 'XL'] },
+  clubcrop:    { name: 'Clubhouse Crop (Washed Black)',         price: 3888, type: 'goods', sizes: ['S', 'M', 'L', 'XL'] },
+  heavyweight: { name: 'Members\u2019 Heavyweight (Vintage Navy)', price: 4888, type: 'goods', sizes: ['S', 'M', 'L', 'XL'] },
   peace:  { name: 'Protected Peace Crew Sweatshirt',                           price: 8888,  type: 'goods' },
   goalie: { name: 'Built to Hold Hoodie by Dedicated Goalie',                  price: 8888,  type: 'goods' },
   kanga:  { name: 'Salt & Pepper Kanga Hoodie by Roots and The Kitchen Dink',  price: 18888, type: 'goods' },
@@ -41,7 +44,7 @@ exports.handler = async (event) => {
     if (!product) return json(400, { error: 'An item in your bag is no longer available.' });
     let size = null;
     if (product.type === 'goods') {
-      size = SIZES.includes(item.size) ? item.size : null;
+      size = (product.sizes || SIZES).includes(item.size) ? item.size : null;
       if (!size) return json(400, { error: `Please choose a size for ${product.name}.` });
     }
     const key = `${item.id}|${size || ''}`;
