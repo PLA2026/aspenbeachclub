@@ -1,6 +1,7 @@
 // netlify/functions/stripe-notify.js
 // Emails the Club whenever something happens in Stripe: orders, session holds,
-// captures, released holds, refunds, and NAMASTAY memberships starting or ending.
+// captures, released holds, refunds, NAMASTAY memberships starting or ending,
+// and Stripe Identity verifications that pass or need attention.
 //
 // Netlify environment variables:
 //   STRIPE_SECRET_KEY      (already set)
@@ -147,6 +148,31 @@ async function handle(evt) {
         ['Member', [o.customer_name, o.customer_email].filter(Boolean).join(', ')],
         ['Note', 'Stripe will retry the card automatically.'],
       ], o.hosted_invoice_url || null);
+
+    case 'identity.verification_session.verified':
+    case 'identity.verification_session.requires_input': {
+      const passed = evt.type.endsWith('verified');
+      if (!passed && !o.last_error) return null; // nothing submitted yet
+      const pd = o.provided_details || {};
+      let name = '';
+      if (passed) {
+        try { // needs Identity read access on the key; skipped quietly if not allowed
+          const full = await stripe.identity.verificationSessions.retrieve(o.id, { expand: ['verified_outputs'] });
+          const v = full.verified_outputs || {};
+          name = [v.first_name, v.last_name].filter(Boolean).join(' ');
+        } catch (e) { /* name stays blank */ }
+      }
+      const who = name || pd.email || 'Applicant';
+      return send(passed ? `Identity verified: ${who}` : `Verification needs attention: ${who}`, [
+        ['Result', passed ? 'Verified. ID is genuine and the selfie matches.' : 'Not verified.'],
+        ['Name on ID', name],
+        ['Email', pd.email],
+        ['Phone', pd.phone],
+        ['Reason', !passed && o.last_error ? (o.last_error.reason || o.last_error.code) : ''],
+        ['Source', o.client_reference_id === 'namastay-guest' ? 'NAMASTAY single-session guest' : 'Membership verification link'],
+        ['Next step', passed ? 'Send the approval or confirmation email.' : 'The applicant can try the link again, or reply to arrange another way to verify.'],
+      ], `${DASH}/identity/verification-sessions/${o.id}`);
+    }
 
     default:
       return null;
