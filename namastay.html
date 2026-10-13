@@ -503,9 +503,9 @@ footer a:hover{color:var(--on-dark)}
         <label class="field">Full name, as shown on your ID<input type="text" name="name" autocomplete="name" placeholder="First and last name" required></label>
         <label class="field">Email<input type="email" name="email" autocomplete="email" placeholder="you@example.com" required></label>
         <label class="field">Mobile phone<input type="tel" name="phone" autocomplete="tel" placeholder="(555) 555-0123" required></label>
-        <label class="field">Photo ID<input type="file" name="photo-id" accept="image/*,.pdf" required><span class="hint">Driver's license, passport or state ID</span></label>
-        <label class="field">Selfie<input type="file" name="selfie" accept="image/*" capture="user" required><span class="hint">We match it to your ID photo</span></label>
-        <label class="check-row"><input type="checkbox" name="consent" value="yes" required>I agree to identity verification and a background screening before my session is confirmed.</label>
+        <label class="field" data-upload>Photo ID<input type="file" name="photo-id" accept="image/*,.pdf" required><span class="hint">Driver's license, passport or state ID</span></label>
+        <label class="field" data-upload>Selfie<input type="file" name="selfie" accept="image/*" capture="user" required><span class="hint">We match it to your ID photo</span></label>
+        <label class="check-row"><input type="checkbox" name="consent" value="yes" required><span id="consent-text">I agree to identity verification and a background screening before my session is confirmed.</span></label>
         <p class="form-err" id="dropin-err" role="alert" hidden></p>
         <button class="btn btn-dark" type="submit">Continue to booking</button>
         <p class="alt-link">Already a member? <a href="#signin" data-go="signin">Book as a member</a></p>
@@ -593,6 +593,7 @@ footer a:hover{color:var(--on-dark)}
         <h2 id="done-title">You're booked.</h2>
         <p id="done-text"></p>
         <p id="done-sub" style="margin-top:18px;padding-top:18px;border-top:1px solid var(--dark-line)"></p>
+        <a class="btn btn-light" id="done-verify" href="#" target="_blank" rel="noopener" style="display:none;margin-bottom:12px;background:#F3EAD8;color:#1C1A17;border-color:#F3EAD8">Verify your ID now</a>
         <button class="btn" id="again">Book another session</button>
       </div>
     </aside>
@@ -608,6 +609,7 @@ footer a:hover{color:var(--on-dark)}
       <a href="#instructors" data-go="home" data-scroll="instructors">Instructors</a>
       <a href="#home" data-go="home">Hotel partnerships</a>
       <a href="#teach" data-go="teach">Teach with us</a>
+      <a href="privacy.html">Privacy</a>
     </nav>
     <p style="font-size:14px">© 2026 NAMASTAY</p>
   </div>
@@ -616,6 +618,12 @@ footer a:hover{color:var(--on-dark)}
 <script>
 (function(){
   var STAFFED = false; // flip to true once instructors are on the roster
+  var ID_LINK = ''; // paste the Stripe Identity verification link between the quotes, e.g. 'https://verify.stripe.com/v/...'
+  if (ID_LINK) {
+    document.querySelectorAll('#dropin-form [data-upload]').forEach(function(l){ l.style.display = 'none'; l.querySelector('input').disabled = true; });
+    document.querySelector('#dropin-form .intro').innerHTML = '<strong>$150 for 60 minutes.</strong> Because our instructors come to your home or hotel room, every guest verifies a government-issued photo ID before their first session. After you request a time, you\u2019ll take a photo of your ID and a quick selfie through Stripe, our verification partner.';
+    document.getElementById('consent-text').textContent = 'I agree to identity verification through Stripe and a background screening before my session is confirmed.';
+  }
   var signedIn = false;
   var links = document.getElementById('links');
   var menuBtn = document.getElementById('menu-btn');
@@ -658,7 +666,7 @@ footer a:hover{color:var(--on-dark)}
     btn.disabled = true; btn.textContent = 'Sending\u2026'; err.hidden = true;
     fetch('/', { method: 'POST', body: new FormData(f) })
       .then(function(r){ if (!r.ok) throw new Error(r.status); go(); })
-      .catch(function(){ err.textContent = 'We could not receive your verification. Please check your files (images or PDF, under 8 MB total) and try again.'; err.hidden = false; })
+      .catch(function(){ err.textContent = '' + (ID_LINK ? 'We could not receive your details. Please try again in a moment.' : 'We could not receive your verification. Please check your files (images or PDF, under 8 MB total) and try again.') + ''; err.hidden = false; })
       .then(function(){ btn.disabled = false; btn.textContent = 'Continue to booking'; });
   });
 
@@ -825,6 +833,9 @@ footer a:hover{color:var(--on-dark)}
   function showDone(){
     var guest = mode==='guest', when = longDate(S.date)+' at '+times[S.time];
     document.getElementById('done-title').textContent = 'Request received.';
+    var dv = document.getElementById('done-verify');
+    dv.style.display = (guest && ID_LINK) ? '' : 'none';
+    if (guest && ID_LINK) dv.href = ID_LINK + (ID_LINK.indexOf('?') < 0 ? '?' : '&') + 'prefilled_email=' + encodeURIComponent(who.email || '') + '&client_reference_id=namastay-guest';
     if (!STAFFED) {
       document.getElementById('done-text').textContent = 'Your request for '+when+' is with the Club. No instructors are on the roster yet, so nothing has been scheduled and no card has been charged.';
       document.getElementById('done-sub').textContent = 'We\u2019ll alert you by email and text as soon as an instructor is available.';
@@ -832,10 +843,10 @@ footer a:hover{color:var(--on-dark)}
       if (window.innerWidth < 1100) document.getElementById('summary').scrollIntoView();
       return;
     }
-    var who = teachers[S.inst].name;
+    var tname = teachers[S.inst].name;
     document.getElementById('done-text').textContent = guest
-      ? 'Your session with '+who+' on '+when+' is on hold. We\u2019ll confirm by text and email as soon as your ID verification clears.'
-      : 'Your request for '+who+' on '+when+' for '+S.len+' minutes is with your concierge. You\u2019ll receive a confirmation by email and text.';
+      ? 'Your session with '+tname+' on '+when+' is on hold. We\u2019ll confirm by text and email as soon as your ID verification clears.'
+      : 'Your request for '+tname+' on '+when+' for '+S.len+' minutes is with your concierge. You\u2019ll receive a confirmation by email and text.';
     document.getElementById('done-sub').textContent = guest ? 'Your card is charged $150 only once your session is confirmed.' : 'Just clear a little floor space. We\u2019ll handle the rest.';
     document.getElementById('summary').classList.add('booked');
     if (window.innerWidth < 1100) document.getElementById('summary').scrollIntoView();
