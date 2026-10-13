@@ -618,7 +618,7 @@ footer a:hover{color:var(--on-dark)}
 <script>
 (function(){
   var STAFFED = false; // flip to true once instructors are on the roster
-  var ID_LINK = ''; // paste the Stripe Identity verification link between the quotes, e.g. 'https://verify.stripe.com/v/...'
+  var ID_LINK = 'https://verify.stripe.com/v/cNi6oHcoS4QGfOz2PL43S00'; // paste the Stripe Identity verification link between the quotes, e.g. 'https://verify.stripe.com/v/...'
   if (ID_LINK) {
     document.querySelectorAll('#dropin-form [data-upload]').forEach(function(l){ l.style.display = 'none'; l.querySelector('input').disabled = true; });
     document.querySelector('#dropin-form .intro').innerHTML = '<strong>$150 for 60 minutes.</strong> Because our instructors come to your home or hotel room, every guest verifies a government-issued photo ID before their first session. After you request a time, you\u2019ll take a photo of your ID and a quick selfie through Stripe, our verification partner.';
