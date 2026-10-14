@@ -542,7 +542,7 @@ footer a:hover{color:var(--on-dark)}
       <div class="teach-done" id="teach-done" hidden>
         <h1>Application received.</h1>
         <p class="intro">Thank you. The Club reviews every application personally and will be in touch by email.</p>
-        <a href="#home" data-go="home" class="btn btn-dark">Back to NAMASTAY</a>
+        <p class="alt-link"><a href="#home" data-go="home">Back to NAMASTAY</a></p>
       </div>
     </div>
   </div>
@@ -678,7 +678,9 @@ footer a:hover{color:var(--on-dark)}
   document.getElementById('teach-form').addEventListener('submit', function(e){
     e.preventDefault();
     var f = e.target, err = document.getElementById('teach-err'), btn = f.querySelector('button[type="submit"]');
-    function done(){ f.hidden = true; document.getElementById('teach-done').hidden = false; window.scrollTo(0,0); }
+    function done(){
+      f.hidden = true; f.setAttribute('style', 'display:none'); document.getElementById('teach-done').hidden = false; window.scrollTo(0,0);
+    }
     var file = f.elements['resume'].files[0];
     if (file && file.size > 8 * 1024 * 1024) { err.textContent = 'Please attach a resume under 8 MB.'; err.hidden = false; return; }
     if (!f.reportValidity()) return;
